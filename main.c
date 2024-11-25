@@ -17,5 +17,7 @@ int main(){
   read(fd,&rand,sizeof(rand));
   rand = rand % 5 + 1;
   printf("PID: %d Randon Number: %d\n",getpid(),rand);
+  sleep(rand);
+  printf("");
   return 0;
 }
