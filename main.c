@@ -13,7 +13,7 @@ int getran(){
   }
   unsigned int rand;
   read(fd,&rand,sizeof(rand));
-  // printf("random number: %d\n",rand%5+1);
+  close(fd);
   return rand % 5 + 1;
 }
 
@@ -21,18 +21,6 @@ int main(){
   printf("%d about to create 2 child processes\n",getpid());
   int rand, stat;
   pid_t pid[2];
-  // pid_t child1 = fork();
-  // if (child1 < 0){
-  //   perror("fork failed.");
-  //   exit(1);
-  // }
-  // if (child1 == 0){
-  //   rand = getran();
-  //   printf("PID: %d %d sec\n",getpid(),rand);
-  //   sleep(rand);
-  //   printf("%d finished after %d seconds\n",getpid(),rand);
-  //   exit(rand);
-  // }
 
   if ((pid[0] = fork()) == 0){
     rand = getran();
@@ -49,28 +37,9 @@ int main(){
     exit(rand);
   }
 
-  // pid_t child2 = fork();
-  // if (child2 < 0){
-  //   perror("fork failed.");
-  //   exit(1);
-  // }
-  // if (child2 == 0){
-  //   rand = getran();
-  //   printf("PID: %d %d sec\n",getpid(),rand);
-  //   sleep(rand);
-  //   printf("%d finished after %d seconds\n",getpid(),rand);
-  //   exit(rand);
-  // }
-  // for (int i = 0; i < 2; i++){
-    pid_t childpid = waitpid(-1,&stat,0);
-    if (WIFEXITED(stat)){
-      // pid_t childpid = wait(NULL);
-      printf("Main Process %d is done. Child %d slept for %d sec\n",getpid(),childpid,WEXITSTATUS(stat));
-      return 0;
-    }
-  // }
-  // pid_t childpid = wait(NULL);
-  // printf("Main Process %d is done. Child %d slept for %d sec\n",getpid(),childpid,rand);
-  // wait(NULL);
+  pid_t childpid = waitpid(-1,&stat,0);
+  if (WIFEXITED(stat)){
+    printf("Main Process %d is done. Child %d slept for %d sec\n",getpid(),childpid,WEXITSTATUS(stat));
+  }
   return 0;
 }
